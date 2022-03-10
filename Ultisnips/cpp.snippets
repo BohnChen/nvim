@@ -1,0 +1,41 @@
+snippet if "single if statement" b
+if (${1:condition}) {
+	${2:statement}
+}
+endsnippet
+
+
+snippet ifnel "if-else statement without "{}" b
+if (${1:condition})
+	${2:statement1}
+else
+	${3:statement2}
+endsnippet
+
+
+snippet ifhel "if-else statement with "{}" b
+if (${1:condition}) {
+	${2:statement1}
+} else {
+	${3:statement2}
+}
+endsnippet
+
+snippet ifmel "if-else statement}" b
+if (${1:condition1}) {
+	${2:statement1}
+} else if (${3:condition2}) {
+	${4:statement2}
+} else ${5:typeYouNeed}
+endsnippet
+
+
+snippet coe "outPut"
+std::cout << "${1:sentences}" << std::endl;
+endsnippet
+
+
+snippet co "outPut"
+std::cout << "${1:sentences}";
+endsnippet
+
