@@ -55,7 +55,7 @@
 	"diagnostic.refreshOnInsertMode": false,
 	"diagnostic.checkCurrentLine": true,
 	"diagnostic.virtualTextPrefix": " ❯❯❯ ",
-	"diagnostic.virtualText": false,
+	"diagnostic.virtualText": true,
 	"codeLens.enable": true,
 	"list.previewHighlightGroup": "Statement",
 	"list.nextKeymap": "<C-e>",
@@ -80,6 +80,9 @@
 		"vue",
 		"svelte",
 		"c",
+		"cc",
+		"lua",
+		// "cpp",
 		"cs",
 		"prisma"
 	],
@@ -178,6 +181,7 @@
 	"prettier.useTabs": true,
 	"prettier.trailingComma": "all",
 	"prettier.singleQuote": false,
+	"prettier.tabWidth": 4,
 	"todolist.autoUpload": true,
 	"todolist.promptForReminder": false,
 	"coc-actions.hideCursor": false,
@@ -185,7 +189,16 @@
 	"diagnostic-languageserver.filetypes": {
 		"vim": "vint",
 		"email": "languagetool",
-		"markdown": ["write-good", "markdownlint"],
+		// "markdown": ["write-good", "markdownlint"],
+		"markdown":  {
+			"editor.formatOnSave" : true,
+			"editor.renderWhitespace" : "all",
+			"editor.quickSuggestions" : {
+				"other" : true,
+				"comments" : true,
+				"strings" : true
+			}
+		},
 		"sh": "shellcheck",
 		"elixir": ["mix_credo", "mix_credo_compile"],
 		"eelixir": ["mix_credo", "mix_credo_compile"],

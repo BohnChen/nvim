@@ -51,8 +51,14 @@ set autochdir
 " ===
 inoremap '' <ESC>
 inoremap 'a <ESC><RIGHT>a
+inoremap 'o <ESC>o
+" using when input multi header files
+inoremap 'y <ESC>yypf<<RIGHT>cw
+" Usind when comment over.
+inoremap '/ <ESC>o<ESC>cc
 noremap ,,s :source $MYVIMRC<CR>
 noremap <F6> :Autoformat<CR>
+set t_Co=256
 
 
 
@@ -67,7 +73,7 @@ set relativenumber
 set cursorline
 set hidden
 set noexpandtab
-set tabstop=2
+set tabstop=4
 set shiftwidth=2
 set softtabstop=2
 set autoindent
@@ -319,7 +325,7 @@ nnoremap \t :tabe<CR>:-tabmove<CR>:term sh -c 'st'<CR><C-\><C-N>:q<CR>
 noremap <LEADER>/ :set splitbelow<CR>:split<CR>:res +10<CR>:term<CR>
 
 " Press space twice to jump to the next '' and edit it
-noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
+noremap <LEADER><LEADER> <Esc>/<CR>:nohlsearch<CR>c4l
 
 " Spelling Check with <space>sc
 noremap <LEADER>sc :set spell!<CR>
@@ -607,19 +613,19 @@ set lazyredraw
 " ===
 set termguicolors " enable true colors support
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-"set background=dark
+" set background=dark
 "let ayucolor="mirage"
 "let g:oceanic_next_terminal_bold = 1
 "let g:oceanic_next_terminal_italic = 1
 "let g:one_allow_italics = 1
 
-"color dracula
-"color one
+" color dracula
+" color one
 color deus
-"color gruvbox
+" color gruvbox
 "let ayucolor="light"
 "color ayu
-"color xcodelighthc
+" color xcodelighthc
 "set background=light
 "set cursorcolumn
 
@@ -694,11 +700,11 @@ inoremap <silent><expr> <TAB>
 	\ <SID>check_back_space() ? "\<TAB>" :
 	\ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 function! s:check_back_space() abort
 	let col = col('.') - 1
 	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <silent><expr> <c-o> coc#refresh()
 function! Show_documentation()
@@ -733,7 +739,7 @@ nnoremap <silent> <space>y :<C-u>CocList -A --normal yank<cr>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gD :tab sp<CR><Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
-" nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
 nmap tt :CocCommand explorer<CR>
@@ -743,8 +749,11 @@ nmap ts <Plug>(coc-translator-p)
 function! s:cocActionsOpenFromSelected(type) abort
   execute 'CocCommand actions.open ' . a:type
 endfunction
+xmap <silent> <leader>a : <C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+nmap <silent> <leader>a : <C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>aw  <Plug>(coc-codeaction-selected)w
+
 " coctodolist
 " nnoremap <leader>tn :CocCommand todolist.create<CR>
 " nnoremap <leader>tl :CocList todolist<CR>
