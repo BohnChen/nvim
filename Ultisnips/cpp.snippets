@@ -1,0 +1,77 @@
+snippet if "single if statement" b
+if (${1:condition}) {
+	${2:statement}
+}
+endsnippet
+
+snippet ifmel "if-else statement}" b
+if (${1:condition1}) {
+	${2:statement1}
+} else if (${3:condition2}) {
+	${4:statement2}
+} else ${5:typeYouNeed}
+endsnippet
+
+
+snippet coe "outPut"
+std::cout << "${1:sentences}" << std::endl;
+endsnippet
+
+
+snippet co "outPut"
+std::cout << "${1:sentences}";
+endsnippet
+
+
+snippet fora "range for"
+for (auto ${2:element}: ${1:Objects}) {
+	${3}
+}${4}
+endsnippet
+
+snippet ce "\n"
+std::cout << std::endl;
+${1}
+endsnippet
+
+
+snippet class "class"
+class ${1:ClassName} {
+public:
+	${4:PublicValOrObj}
+
+protect:
+	${3:ProtectedValOrObj}
+
+private:
+	${2:PrivateValOrObj}
+};${5}
+endsnippet
+
+
+snippet struct "struct"
+struct ${1:structName} {
+	${2:val}
+
+
+	${1:structName}() ${3} {
+		${4}
+	}
+	${5}
+};
+endsnippet
+
+snippet /** "/**/"
+/**
+ * leetcode : ${1:num}
+ * Descrip	 : ${2:none}  
+ * Paragra  : Bohn Chen datetime${3}
+ */
+ ${4}
+endsnippet
+
+snippet #if "if 1"
+#if ${1:1}
+	${2}
+#endif
+endsnippet
