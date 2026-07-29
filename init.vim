@@ -17,8 +17,6 @@ let g:lite_enable_copilot = get(g:, 'lite_enable_copilot', 0)
 let g:lite_enable_treesitter = get(g:, 'lite_enable_treesitter', 0)
 let g:lite_enable_lua_extras = get(g:, 'lite_enable_lua_extras', 0)
 let g:lite_enable_file_managers = get(g:, 'lite_enable_file_managers', 0)
-let g:lite_auto_install_plug = get(g:, 'lite_auto_install_plug', 1)
-let g:lite_plug_url = get(g:, 'lite_plug_url', 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
 
 " Put personal overrides here; it is sourced before plugins so switches work.
 let s:local_vim = expand('~/.config/nvim/local.vim')
@@ -27,152 +25,194 @@ if filereadable(s:local_vim)
 endif
 
 " ---------------------------------------------------------------------------
-" Plugins
+" Plugins (managed by lazy.nvim)
 " ---------------------------------------------------------------------------
-" Plugins are managed by vim-plug. If plug.vim is missing and
-" g:lite_auto_install_plug is enabled, this config downloads plug.vim on first
-" startup and then runs :PlugInstall automatically on VimEnter.
-let s:plug_file = expand('~/.config/nvim/autoload/plug.vim')
-let s:plug_bootstrapped = 0
+lua << EOF
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.uv.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
-function! s:InstallVimPlug() abort
-  if filereadable(s:plug_file)
-    echo 'vim-plug already exists: ' . s:plug_file
-    return
-  endif
-  if !executable('curl')
-    echoerr 'curl not found. Install vim-plug manually into ~/.config/nvim/autoload/plug.vim'
-    return
-  endif
-  call mkdir(fnamemodify(s:plug_file, ':h'), 'p')
-  execute 'silent !curl -fLo ' . shellescape(s:plug_file) . ' --create-dirs ' . shellescape(g:lite_plug_url)
-  if v:shell_error || !filereadable(s:plug_file)
-    echoerr 'Failed to install vim-plug from: ' . g:lite_plug_url
-    return
-  endif
-  let s:plug_bootstrapped = 1
-  execute 'source ' . fnameescape(s:plug_file)
-  echo 'vim-plug installed. :PlugInstall will run automatically.'
-endfunction
+local plugins = {
+  -- Completion and LSP. No Coc.
+  { "hrsh7th/nvim-cmp" },
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "hrsh7th/cmp-buffer" },
+  { "hrsh7th/cmp-path" },
+  { "hrsh7th/cmp-cmdline" },
+  { "mason-org/mason.nvim", enabled = vim.g.lite_enable_mason ~= 0 },
 
-command! LiteInstallPlug call <SID>InstallVimPlug()
+  -- Stable editing and navigation.
+  { "theniceboy/nvim-deus" },
+  { "theniceboy/eleline.vim", branch = "no-scrollbar" },
+  { "itchyny/vim-cursorword" },
+  { "RRethy/vim-illuminate" },
+  { "airblade/vim-rooter" },
+  { "junegunn/fzf" },
+  { "junegunn/fzf.vim" },
+  { "pechorin/any-jump.vim" },
+  { "wellle/tmux-complete.vim" },
+  { "theniceboy/vim-snippets" },
 
-if !filereadable(s:plug_file) && g:lite_auto_install_plug
-  call s:InstallVimPlug()
-endif
+  -- Git.
+  { "theniceboy/vim-gitignore", ft = { "gitignore" } },
+  { "cohama/agit.vim" },
 
-if filereadable(s:plug_file)
-  call plug#begin(expand('~/.config/nvim/plugged'))
+  -- Filetype support.
+  { "elzr/vim-json" },
+  { "neoclide/jsonc.vim" },
+  { "othree/html5.vim" },
+  { "alvan/vim-closetag" },
+  { "pangloss/vim-javascript" },
+  { "MaxMEllon/vim-jsx-pretty" },
+  { "leafgarland/typescript-vim" },
+  { "peitalin/vim-jsx-typescript" },
+  { "styled-components/vim-styled-components", branch = "main" },
+  { "pantharshit00/vim-prisma" },
+  { "fatih/vim-go", ft = { "go" } },
+  { "Vimjas/vim-python-pep8-indent", ft = { "python" } },
+  { "tweekmonster/braceless.vim", ft = { "python" } },
+  { "dart-lang/dart-vim-plugin", ft = { "dart" } },
+  { "keith/swift.vim" },
+  { "arzg/vim-swift" },
+  { "wlangstroth/vim-racket" },
+  { "hashivim/vim-terraform" },
 
-  " Completion and LSP. No Coc.
-  Plug 'hrsh7th/nvim-cmp'
-  Plug 'hrsh7th/cmp-nvim-lsp'
-  Plug 'hrsh7th/cmp-buffer'
-  Plug 'hrsh7th/cmp-path'
-  Plug 'hrsh7th/cmp-cmdline'
-  if g:lite_enable_mason
-    Plug 'mason-org/mason.nvim'
-  endif
+  -- Text / Markdown.
+  { "dhruvasagar/vim-table-mode", cmd = "TableModeToggle", ft = { "text", "markdown" } },
+  { "mzlogin/vim-markdown-toc", ft = { "markdown" } },
+  { "dkarter/bullets.vim" },
+  { "junegunn/goyo.vim" },
+  { "reedes/vim-wordy" },
 
-  " Stable editing and navigation from your original config.
-  Plug 'theniceboy/nvim-deus'
-  Plug 'theniceboy/eleline.vim', { 'branch': 'no-scrollbar' }
-  Plug 'itchyny/vim-cursorword'
-  Plug 'RRethy/vim-illuminate'
-  Plug 'airblade/vim-rooter'
-  Plug 'junegunn/fzf'
-  Plug 'junegunn/fzf.vim'
-  Plug 'pechorin/any-jump.vim'
-  Plug 'wellle/tmux-complete.vim'
-  Plug 'theniceboy/vim-snippets'
+  -- Markdown 实时预览
+  { "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreview", "MarkdownPreviewStop", "MarkdownPreviewToggle" },
+    ft = { "markdown" },
+    build = function()
+      -- 下载预编译二进制（注意：这是 lazy.nvim 的 build hook，
+      -- 只在 :Lazy install / :Lazy update 时执行，不在每次打开 nvim 时执行）
+      --
+      -- 本插件需要 app/bin/ 下的预编译二进制才能启动预览服务。
+      -- install.sh 从 GitHub Releases 下载对应平台的二进制（macOS ARM64 ~17MB）。
+      -- 这比在本地用 yarn + node_modules 构建更快更可靠，且不依赖 Node.js 生态。
+      local ok, err = pcall(function()
+        local app_dir = vim.fn.getcwd() .. "/app"
+        local script = app_dir .. "/install.sh"
 
-  " Git, kept lightweight.
-  Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
-  Plug 'cohama/agit.vim'
+        -- 1) 下载预编译二进制
+        local ret = vim.fn.system({"bash", script})
+        if vim.v.shell_error ~= 0 then
+          error("install.sh 失败:\n" .. ret)
+        end
 
-  " Filetype support.
-  Plug 'elzr/vim-json'
-  Plug 'neoclide/jsonc.vim'
-  Plug 'othree/html5.vim'
-  Plug 'alvan/vim-closetag'
-  Plug 'pangloss/vim-javascript'
-  Plug 'MaxMEllon/vim-jsx-pretty'
-  Plug 'leafgarland/typescript-vim'
-  Plug 'peitalin/vim-jsx-typescript'
-  Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-  Plug 'pantharshit00/vim-prisma'
-  Plug 'fatih/vim-go', { 'for': ['go', 'vim-plug'], 'tag': '*' }
-  Plug 'Vimjas/vim-python-pep8-indent', { 'for': ['python', 'vim-plug'] }
-  Plug 'tweekmonster/braceless.vim', { 'for': ['python', 'vim-plug'] }
-  Plug 'dart-lang/dart-vim-plugin', { 'for': ['dart', 'vim-plug'] }
-  Plug 'keith/swift.vim'
-  Plug 'arzg/vim-swift'
-  Plug 'wlangstroth/vim-racket'
-  Plug 'hashivim/vim-terraform'
+        -- 2) macOS Gatekeeper：从 GitHub 下载的 unsigned 二进制会被隔离，
+        --    移除 quarantine 标记使其可通过 macOS 安全检查执行。
+        if vim.fn.has("mac") == 1 then
+          local bin_dir = app_dir .. "/bin"
+          local dir = vim.uv or vim.loop
+          local handle = dir.fs_scandir(bin_dir)
+          if handle then
+            while true do
+              local name = dir.fs_scandir_next(handle)
+              if not name then break end
+              vim.fn.system({"xattr", "-d", "com.apple.quarantine", bin_dir .. "/" .. name})
+            end
+          end
+        end
+      end)
+      if not ok then
+        vim.notify("[markdown-preview.nvim] 构建失败: " .. tostring(err)
+          .. "\n打开 md 文件后无预览，可手动执行: cd ~/.local/share/nvim/lazy/markdown-preview.nvim/app && bash install.sh",
+          vim.log.levels.WARN)
+      end
+    end,
+    init = function()
+      vim.g.mkdp_auto_start = 0
+      vim.g.mkdp_auto_close = 1
+      vim.g.mkdp_refresh_slow = 0
+      vim.g.mkdp_browser = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+      vim.g.mkdp_echo_preview_url = 1
+    end,
+  },
 
-  " Text / Markdown.
-  Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle', 'for': ['text', 'markdown', 'vim-plug'] }
-  Plug 'mzlogin/vim-markdown-toc', { 'for': ['markdown', 'vim-plug'] }
-  Plug 'dkarter/bullets.vim'
-  Plug 'junegunn/goyo.vim'
-  Plug 'reedes/vim-wordy'
+  -- Editing operators and text objects.
+  { "mbbill/undotree" },
+  { "jiangmiao/auto-pairs" },
+  { "mg979/vim-visual-multi" },
+  { "theniceboy/tcomment_vim" },
+  { "theniceboy/antovim" },
+  { "tpope/vim-surround" },
+  { "gcmt/wildfire.vim" },
+  { "junegunn/vim-after-object" },
+  { "godlygeek/tabular" },
+  { "tpope/vim-capslock" },
+  { "svermeulen/vim-subversive" },
+  { "theniceboy/argtextobj.vim" },
+  { "rhysd/clever-f.vim" },
+  { "AndrewRadev/splitjoin.vim" },
+  { "theniceboy/pair-maker.vim" },
+  { "theniceboy/vim-move" },
+  { "Yggdroot/indentLine" },
 
-  " Editing operators and text objects.
-  Plug 'mbbill/undotree'
-  Plug 'jiangmiao/auto-pairs'
-  Plug 'mg979/vim-visual-multi'
-  Plug 'theniceboy/tcomment_vim'
-  Plug 'theniceboy/antovim'
-  Plug 'tpope/vim-surround'
-  Plug 'gcmt/wildfire.vim'
-  Plug 'junegunn/vim-after-object'
-  Plug 'godlygeek/tabular'
-  Plug 'tpope/vim-capslock'
-  Plug 'svermeulen/vim-subversive'
-  Plug 'theniceboy/argtextobj.vim'
-  Plug 'rhysd/clever-f.vim'
-  Plug 'AndrewRadev/splitjoin.vim'
-  Plug 'theniceboy/pair-maker.vim'
-  Plug 'theniceboy/vim-move'
-  Plug 'Yggdroot/indentLine'
+  -- Utilities.
+  { "skywind3000/asynctasks.vim" },
+  { "skywind3000/asyncrun.vim" },
+  { "luochen1990/rainbow" },
+  { "mg979/vim-xtabline" },
+  { "wincent/terminus" },
+  { "lambdalisue/suda.vim" },
 
-  " Utilities.
-  Plug 'skywind3000/asynctasks.vim'
-  Plug 'skywind3000/asyncrun.vim'
-  Plug 'luochen1990/rainbow'
-  Plug 'mg979/vim-xtabline'
-	Plug 'wincent/terminus'
-	Plug 'lambdalisue/suda.vim'
+  -- Optional: Copilot
+  { "github/copilot.vim", enabled = vim.g.lite_enable_copilot ~= 0 },
 
-	" Optional heavier integrations. Enable from ~/.config/nvim/local.vim.
-	if g:lite_enable_copilot
-    Plug 'github/copilot.vim'
-  endif
-  if g:lite_enable_treesitter
-    Plug 'nvim-treesitter/nvim-treesitter'
-  endif
-  if g:lite_enable_lua_extras
-    Plug 'nvim-lua/plenary.nvim'
-    Plug 'lewis6991/gitsigns.nvim'
-    Plug 'kevinhwang91/nvim-hlslens'
-    Plug 'NvChad/nvim-colorizer.lua'
-    Plug 'nvim-pack/nvim-spectre'
-  endif
-  if g:lite_enable_file_managers
-    Plug 'kdheepak/lazygit.nvim'
-    Plug 'theniceboy/joshuto.nvim'
-    Plug 'kevinhwang91/rnvimr'
-  endif
+  -- Optional: Treesitter
+  { "nvim-treesitter/nvim-treesitter",
+    enabled = vim.g.lite_enable_treesitter ~= 0,
+    build = ":TSUpdate",
+  },
 
-  call plug#end()
+  -- Optional: Lua extras (gitsigns, hlslens, colorizer, spectre)
+  { "nvim-lua/plenary.nvim", enabled = vim.g.lite_enable_lua_extras ~= 0 },
+  { "lewis6991/gitsigns.nvim", enabled = vim.g.lite_enable_lua_extras ~= 0 },
+  { "kevinhwang91/nvim-hlslens", enabled = vim.g.lite_enable_lua_extras ~= 0 },
+  { "NvChad/nvim-colorizer.lua", enabled = vim.g.lite_enable_lua_extras ~= 0 },
+  { "nvim-pack/nvim-spectre", enabled = vim.g.lite_enable_lua_extras ~= 0 },
 
-  if s:plug_bootstrapped
-    augroup lite_plug_bootstrap
-      autocmd!
-      autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-    augroup END
-  endif
-endif
+  -- Optional: File managers
+  { "kdheepak/lazygit.nvim", cmd = "LazyGit", enabled = vim.g.lite_enable_file_managers ~= 0 },
+  { "theniceboy/joshuto.nvim", enabled = vim.g.lite_enable_file_managers ~= 0 },
+  { "kevinhwang91/rnvimr", enabled = vim.g.lite_enable_file_managers ~= 0 },
+}
+
+require("lazy").setup(plugins, {
+  install = {
+    colorscheme = { "deus" },
+  },
+  ui = {
+    border = "none",
+  },
+  performance = {
+    cache = { enabled = true },
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "netrwPlugin",
+        "tarPlugin",
+        "zipPlugin",
+      },
+    },
+  },
+})
+EOF
 
 " ---------------------------------------------------------------------------
 " Core editor behavior
@@ -258,6 +298,7 @@ augroup lite_core
   autocmd BufWritePost init.vim,.nvimrc nested source $MYVIMRC
   autocmd TermOpen term://* startinsert
   autocmd BufRead,BufNewFile *.md,*.markdown setlocal spell
+  autocmd FileType markdown ++nested lua vim.fn.timer_start(400, function() pcall(vim.cmd, "MarkdownPreview") end)
   autocmd BufRead,BufNewFile tsconfig.json setlocal filetype=jsonc
 augroup END
 
@@ -363,6 +404,13 @@ noremap <C-c> zz
 noremap \s :%s//g<Left><Left>
 noremap <Leader>sw :set wrap!<CR>
 nnoremap \p :echo expand('%:p')<CR>
+
+" ---------------------------------------------------------------------------
+" Markdown preview (markdown-preview.nvim)
+" ---------------------------------------------------------------------------
+" F7 打开浏览器预览, F8 关闭预览
+nnoremap <F7> :MarkdownPreview<CR>
+nnoremap <F8> :MarkdownPreviewStop<CR>
 
 " ---------------------------------------------------------------------------
 " Compile/run command
@@ -830,7 +878,7 @@ end
 
 vim.api.nvim_create_user_command('LiteLspInstallCore', function()
   if vim.fn.exists(':MasonInstall') ~= 2 then
-    print('Mason is not available. Run :PlugInstall first, or install language servers with brew/npm.')
+    print('Mason is not available. Install language servers with brew/npm, or enable mason in local.vim.')
     return
   end
   vim.cmd('MasonInstall lua-language-server pyright typescript-language-server html-lsp css-lsp json-lsp gopls clangd bash-language-server')

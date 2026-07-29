@@ -4,7 +4,7 @@
 
 这份配置使用：
 
-- `vim-plug` 管理插件
+- `lazy.nvim` 管理插件（自动懒加载 + 版本锁定）
 - Neovim 内置 LSP 提供语言服务
 - `nvim-cmp` 提供补全菜单
 - `mason.nvim` 安装常用 language server
@@ -27,11 +27,10 @@
 
 主要适配：
 
-- macOS
-- Apple Silicon Mac
+- macOS（Apple Silicon）
 - Neovim 0.11+
 
-理论上也可用于 Linux，但这份配置的路径、安装方式和测试目标主要按 macOS 主力开发机设计。
+Linux 也可用，但测试和路径设计以 macOS 为主。
 
 ## 软件要求
 
@@ -41,27 +40,21 @@
 - `git`
 - `curl`
 
-推荐：
+推荐（用于安装 language server）：
 
 - Homebrew
-- Node.js / npm，用于安装 TypeScript、HTML、CSS、JSON、Bash、YAML、Prisma 等 language server
-- Go，用于安装 `gopls`
-- clangd，用于 C / C++ / Objective-C
-- Python 3，用于 Python 开发环境
+- Node.js / npm
+- Go（用于 `gopls`）
+- `clangd`（C/C++ 支持）
+- Python 3
 
-检查 Neovim 版本：
+检查环境：
 
 ```sh
 nvim --version
-```
-
-检查常用命令：
-
-```sh
 git --version
 curl --version
 node --version
-npm --version
 go version
 clangd --version
 ```
@@ -70,65 +63,34 @@ clangd --version
 
 ### 1. 备份旧配置
 
-如果你已经有自己的 Neovim 配置，先备份：
-
 ```sh
 mv ~/.config/nvim ~/.config/nvim.bak
 ```
 
-也可以只备份旧的 `init.vim`：
-
-```sh
-cp ~/.config/nvim/init.vim ~/.config/nvim/init.vim.bak
-```
-
 ### 2. 放入新配置
-
-创建配置目录：
 
 ```sh
 mkdir -p ~/.config/nvim
-```
-
-复制本配置：
-
-```sh
 cp init.vim ~/.config/nvim/init.vim
 ```
 
 ### 3. 第一次启动
 
-打开 Neovim：
-
 ```sh
 nvim
 ```
 
-如果 `~/.config/nvim/autoload/plug.vim` 不存在，配置会自动下载 `vim-plug`，并在首次启动时自动执行：
-
-```vim
-:PlugInstall
-```
-
-如果自动安装没有触发，也可以手动执行：
-
-```vim
-:LiteInstallPlug
-:source $MYVIMRC
-:PlugInstall
-```
-
-插件安装完成后，重启 Neovim。
+lazy.nvim 会自动克隆自己，然后安装所有插件，全程无需手动操作。
 
 ### 4. 安装核心 LSP
 
-重启后执行：
+插件安装完成后重启 Neovim，然后执行：
 
 ```vim
 :LiteLspInstallCore
 ```
 
-这个命令会通过 Mason 安装核心 language server：
+这个命令会通过 Mason 安装：
 
 ```text
 lua-language-server
@@ -142,63 +104,48 @@ clangd
 bash-language-server
 ```
 
-安装进度可通过 Mason 查看：
+查看 Mason 进度：
 
 ```vim
 :Mason
+:MasonLog
 ```
 
-查看 Mason 日志：
+### 5. 验证
 
 ```vim
-:MasonLog
+:LspEnabled
+:LspMissing
+:LspInfo
 ```
 
 ## 插件管理
 
-本配置使用 `vim-plug` 管理插件。
-
-安装插件：
+本配置使用 `lazy.nvim` 管理插件。
 
 ```vim
-:PlugInstall
+:Lazy            " 打开管理面板（查看、更新、回滚）
+:Lazy update     " 更新所有插件
+:Lazy install    " 安装新插件
+:Lazy clean      " 清理未使用的插件
 ```
 
-更新插件：
-
-```vim
-:PlugUpdate
-```
-
-查看插件状态：
-
-```vim
-:PlugStatus
-```
-
-清理未声明插件：
-
-```vim
-:PlugClean
-```
-
-升级 `vim-plug` 自身：
-
-```vim
-:PlugUpgrade
-```
-
-插件默认安装目录：
+插件安装目录：
 
 ```text
-~/.config/nvim/plugged
+~/.local/share/nvim/lazy/
 ```
 
-`vim-plug` 本体路径：
+版本锁文件是 `lazy-lock.json`，建议纳入 git 管理，保证多机安装的插件版本一致。
+
+## Markdown 预览
 
 ```text
-~/.config/nvim/autoload/plug.vim
+F7       打开浏览器预览（Chrome）
+F8       关闭预览
 ```
+
+打开 `.md` 文件后会自动弹出预览，编辑内容时实时刷新。首次安装时插件会自动下载预编译二进制，无需 Node.js 或 yarn。
 
 ## 功能亮点
 
@@ -229,8 +176,8 @@ mason-org/mason.nvim
 ### 视觉和基础增强
 
 ```text
-theniceboy/nvim-deus
-theniceboy/eleline.vim
+theniceboy/nvim-deus          (colorscheme)
+theniceboy/eleline.vim        (statusline)
 itchyny/vim-cursorword
 RRethy/vim-illuminate
 airblade/vim-rooter
@@ -293,6 +240,7 @@ Yggdroot/indentLine
 ```text
 dhruvasagar/vim-table-mode
 mzlogin/vim-markdown-toc
+iamcco/markdown-preview.nvim    (实时预览, F7/F8)
 dkarter/bullets.vim
 junegunn/goyo.vim
 reedes/vim-wordy
@@ -341,8 +289,6 @@ reedes/vim-wordy
 :LspInfo
 ```
 
-如果某个语言出现在 `:LspMissing` 中，只说明该语言服务器当前机器没有安装；不影响其他语言使用。
-
 ## 补全操作
 
 插入模式下：
@@ -356,13 +302,6 @@ reedes/vim-wordy
 | `<C-e>` | 关闭补全菜单 |
 | `<C-d>` | 补全文档向下滚动 |
 | `<C-u>` | 补全文档向上滚动 |
-
-补全来源包括：
-
-- LSP
-- 当前 buffer
-- 文件路径
-- 命令行
 
 ## LSP 快捷键
 
@@ -426,19 +365,6 @@ reedes/vim-wordy
 | `<C-U>` | 视窗向上滚动 |
 | `<C-E>` | 视窗向下滚动 |
 
-### 命令行模式
-
-| 快捷键 | 功能 |
-| --- | --- |
-| `<C-a>` | 到命令行开头 |
-| `<C-e>` | 到命令行结尾 |
-| `<C-p>` | 上一条命令 |
-| `<C-n>` | 下一条命令 |
-| `<C-b>` | 左移 |
-| `<C-f>` | 右移 |
-| `<M-b>` | 向左跳一个词 |
-| `<M-w>` | 向右跳一个词 |
-
 ## 窗口和 Tab 管理
 
 ### 窗口
@@ -480,6 +406,8 @@ reedes/vim-wordy
 
 | 快捷键 | 功能 |
 | --- | --- |
+| `F7` | 打开浏览器预览 Markdown |
+| `F8` | 关闭 Markdown 预览 |
 | `<Leader><Leader>` | 跳到下一个 `<++>` 占位符并编辑 |
 | `<Leader>sc` | 开关拼写检查 |
 | `` ` `` | 切换大小写 |
@@ -496,80 +424,20 @@ reedes/vim-wordy
 
 ## 常用检查命令
 
-确认配置路径：
-
 ```vim
-:echo $MYVIMRC
-```
-
-查看启动消息：
-
-```vim
-:messages
-```
-
-查看插件状态：
-
-```vim
-:PlugStatus
-```
-
-查看 Mason：
-
-```vim
-:Mason
-```
-
-查看启用的 LSP：
-
-```vim
-:LspEnabled
-```
-
-查看缺失的 LSP 命令：
-
-```vim
-:LspMissing
-```
-
-查看当前 buffer 的 LSP：
-
-```vim
-:LspInfo
-```
-
-检查 `nvim-cmp`：
-
-```vim
-:lua print(require("cmp") and "cmp ok")
-```
-
-检查当前 buffer 的 LSP client：
-
-```vim
-:lua for _, c in ipairs(vim.lsp.get_clients({bufnr=0})) do print(c.name) end
-```
-
-检查快捷键来源：
-
-```vim
-:verbose nmap u
-:verbose nmap n
-:verbose nmap e
-:verbose nmap i
-:verbose nmap k
-:verbose nmap l
+:echo $MYVIMRC          " 确认配置路径
+:messages               " 查看启动消息
+:Lazy                   " 打开 lazy.nvim 管理面板
+:Mason                  " 查看 Mason 状态
+:checkhealth            " 健康检查
+:LspEnabled             " 查看启用的 LSP
+:LspMissing             " 查看缺失的 LSP
+:LspInfo                " 查看当前 buffer 的 LSP
 ```
 
 ## 本地覆盖配置
 
-你可以创建：
-
-```text
-~/.config/nvim/local.vim
-```
-
-这个文件会在插件声明前被读取，适合放机器本地开关。
+创建 `~/.config/nvim/local.vim`，在插件声明前被读取。
 
 启用 Copilot：
 
@@ -595,85 +463,58 @@ let g:lite_enable_lua_extras = 1
 let g:lite_enable_file_managers = 1
 ```
 
-关闭 Mason 插件声明：
+关闭 Mason：
 
 ```vim
 let g:lite_enable_mason = 0
 ```
 
-关闭首次启动自动安装 `vim-plug`：
-
-```vim
-let g:lite_auto_install_plug = 0
-```
-
 ## 常见问题
 
-### 1. `:PlugInstall` 不存在
+### 1. `:Lazy` 不存在
 
-说明 `vim-plug` 还没有安装。执行：
+说明 lazy.nvim 安装失败。检查网络连接后重新启动 nvim，或手动克隆：
 
-```vim
-:LiteInstallPlug
-:source $MYVIMRC
-:PlugInstall
+```sh
+git clone --filter=blob:none --branch=stable https://github.com/folke/lazy.nvim.git ~/.local/share/nvim/lazy/lazy.nvim
 ```
 
 ### 2. `:LspMissing` 里有很多语言
 
 这只是表示这些 language server 当前机器没装。不写对应语言可以忽略。
 
-例如：
+### 3. 无法安装 `gopls`
 
-```text
-rust_analyzer [rust-analyzer]
-yamlls [yaml-language-server]
-omnisharp [omnisharp|OmniSharp]
-```
-
-不会影响 C++、Go、Python、TypeScript 等已经安装好的 LSP。
-
-### 3. `gopls` 安装失败，提示 Go 版本过低
-
-新版 `gopls` 可能要求更新的 Go 工具链。如果看到类似：
-
-```text
-requires go >= 1.26.0
-GOTOOLCHAIN=local
-```
-
-可以执行：
+如果提示 Go 版本过低：
 
 ```sh
 go env -w GOTOOLCHAIN=auto
 ```
 
-然后回到 Neovim：
+然后重试：
 
 ```vim
 :MasonUninstall gopls
 :MasonInstall gopls
 ```
 
-### 4. `:LspInfo` 之前不存在
+### 4. Markdown 预览不工作（F7 无反应）
 
-这份配置已经提供了自定义 `:LspInfo`。如果你的本机还提示不存在，说明还没有替换到最新 `init.vim`，或 Neovim 没有读取当前配置。
-
-检查：
+运行：
 
 ```vim
-:echo $MYVIMRC
+:checkhealth markdown-preview
 ```
 
-### 5. C++ 有补全和跳转，但 `:LspMissing` 还有内容
+或者手动重新安装二进制：
 
-这是正常的。C++ 使用 `clangd`，只要当前 C++ buffer 中：
-
-```vim
-:LspInfo
+```sh
+cd ~/.local/share/nvim/lazy/markdown-preview.nvim/app && bash install.sh
 ```
 
-能看到 `clangd`，并且 `gd` 能跳转定义，就说明 C++ LSP 正常。
+### 5. C++ 有补全，但 `:LspMissing` 还有内容
+
+正常。C++ 用 `clangd`，只要 `:LspInfo` 能看到它就说明工作。
 
 ## 设计取舍
 
@@ -694,32 +535,26 @@ go env -w GOTOOLCHAIN=auto
 
 这是一份轻量但可写代码的 Neovim 配置。它不是完整 IDE 大而全方案，而是一套稳定、易排错、保留 Colemak 手感的主力开发配置。
 
-推荐安装路径：
+安装路径：
 
 ```text
 ~/.config/nvim/init.vim
 ```
 
-推荐首次安装流程：
+首次安装流程：
 
 ```sh
 mkdir -p ~/.config/nvim
 cp init.vim ~/.config/nvim/init.vim
-nvim
-```
-
-进入 Neovim 后：
-
-```vim
-:PlugInstall
-:LiteLspInstallCore
+nvim                    # lazy.nvim 自动安装所有插件
+# 重启 nvim
+:LiteLspInstallCore     # 安装核心 language server
 ```
 
 最终验收：
 
 ```vim
-:PlugStatus
+:Lazy
 :LspEnabled
-:LspMissing
 :LspInfo
 ```
