@@ -1,0 +1,62 @@
+snippet if
+	if (${1:condition}) {
+		${2}
+	}
+
+snippet else
+	} else {
+		${1}
+	}
+
+snippet elif
+	} else if (${1:condition}) {
+		${2}
+
+snippet for
+	for (let ${1:i} = 0; ${1:i} < ${2:n}; ${1:i}++) {
+		${3}
+	}
+
+snippet forof
+	for (const ${1:item} of ${2:items}) {
+		${3}
+	}
+
+snippet forin
+	for (const ${1:key} in ${2:obj}) {
+		${3}
+	}
+
+snippet while
+	while (${1:condition}) {
+		${2}
+	}
+
+snippet func
+	function ${1:name}(${2:args}) {
+		${3}
+	}
+
+snippet af
+	const ${1:name} = (${2:args}) => {
+		${3}
+	}
+
+snippet export
+	export ${1:default} ${2:function} ${3:name}
+
+snippet import
+	import ${1:name} from "${2:module}"
+
+snippet impd
+	import { ${1} } from "${2:module}"
+
+snippet try
+	try {
+		${1}
+	} catch (${2:error}) {
+		${3}
+	}
+
+snippet cl
+	console.log(${1})

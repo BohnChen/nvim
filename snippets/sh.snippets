@@ -1,0 +1,88 @@
+snippet if
+	if [[ ${1:condition} ]]; then
+		${2}
+	fi
+
+snippet else
+	else
+		${1}
+	fi
+
+snippet elif
+	elif [[ ${1:condition} ]]; then
+		${2}
+
+snippet for
+	for ${1:var} in ${2:list}; do
+		${3}
+	done
+
+snippet while
+	while [[ ${1:condition} ]]; do
+		${2}
+	done
+
+snippet func
+	function ${1:name}() {
+		${2}
+	}
+
+snippet case
+	case "${1:var}" in
+		${2:pattern})
+			${3}
+			;;
+		*)
+			${4}
+			;;
+	esac
+
+snippet echo
+	echo "${1}"
+
+snippet read
+	read -r ${1:var}
+
+snippet chmod
+	chmod ${1:755} ${2:file}
+
+snippet header
+	#!/usr/bin/env bash
+	#
+	# ${1:description}
+	#
+
+snippet err
+	echo "[ERROR] ${1}" >&2
+
+snippet warn
+	echo "[WARN] ${1}" >&2
+
+snippet info
+	echo "[INFO] ${1}"
+
+snippet exit
+	exit ${1:0}
+
+snippet cmdsub
+	$(${1:command})
+
+snippet here
+	cat << EOF
+	${1}
+	EOF
+
+snippet trap_exit
+	trap '${1:cleanup}' EXIT
+
+snippet getopt
+	while getopts "${1:hv}" opt; do
+		case $opt in
+			${2:})
+				;;
+			\\?)
+				echo "Usage: $0 ${3:-[options]}"
+				exit 1
+				;;
+		esac
+	done

@@ -1,0 +1,62 @@
+snippet main
+	if __name__ == "__main__":
+		${1:main}()
+
+snippet def
+	def ${1:name}(${2:args}):
+		${3:pass}
+
+snippet class
+	class ${1:ClassName}:
+		def __init__(self${2}):
+			${3:pass}
+
+snippet if
+	if ${1:condition}:
+		${2}
+
+snippet elif
+	elif ${1:condition}:
+		${2}
+
+snippet else
+	else:
+		${1}
+
+snippet for
+	for ${1:item} in ${2:items}:
+		${3}
+
+snippet while
+	while ${1:condition}:
+		${2}
+
+snippet try
+	try:
+		${1}
+	except ${2:Exception} as e:
+		${3}
+
+snippet with
+	with open("${1:file}", "${2:w}") as f:
+		${3}
+
+snippet import
+	import ${1:module}
+
+snippet from
+	from ${1:module} import ${2:name}
+
+snippet asyncio
+	async def ${1:name}(${2}):
+		${3:pass}
+
+snippet await
+	await ${1:func}(${2})
+
+snippet log
+	logging.debug(f"${1:debug}: {${2}}")
+
+snippet ifmain
+	if __name__ == "__main__":
+		${1}

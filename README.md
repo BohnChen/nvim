@@ -1,560 +1,300 @@
-# Colemak Neovim Lite
+<!-- SHIELDS / BADGES -->
+<p align="center">
+  <a href="https://github.com/BohnChen/nvim"><img src="https://img.shields.io/badge/Neovim-0.11%2B-blueviolet" alt="Neovim 0.11+"></a>
+  <a href="https://github.com/BohnChen/nvim"><img src="https://img.shields.io/badge/macOS-Apple_Silicon-brightgreen" alt="macOS Apple Silicon"></a>
+  <a href="https://github.com/BohnChen/nvim/blob/main/LICENSE"><img src="https://img.shields.io/github/license/BohnChen/nvim" alt="License"></a>
+</p>
 
-一份面向 Apple Silicon Mac 的轻量 Neovim 配置。它从原本复杂的 Neovim 配置中保留了 Colemak 键位习惯、常用文本编辑增强和必要的代码补全能力，同时移除了容易在插件更新后导致启动报错的 `coc.nvim` 链路。
+<br />
 
-这份配置使用：
+<!-- TITLE -->
+<div align="center">
+  <h1>Colemak Neovim Lite</h1>
+  <p>面向 Apple Silicon Mac 的轻量 Neovim 配置。<br />
+  保留 Colemak 键位 · Lazy.nvim 管理 · 原生 LSP · 开箱即写</p>
+</div>
 
-- `lazy.nvim` 管理插件（自动懒加载 + 版本锁定）
-- Neovim 内置 LSP 提供语言服务
-- `nvim-cmp` 提供补全菜单
-- `mason.nvim` 安装常用 language server
+<br />
 
-配置文件目标路径：
+<p align="center">
+  <img src="assets/yazilook.png" alt="Colemak Neovim Lite 编辑界面" width="800">
+</p>
 
-```text
-~/.config/nvim/init.vim
-```
+<br />
 
-## 适用人群
+## 为什么这份配置
 
-- 使用 Colemak 键盘布局的人。
-- 想从复杂 `coc.nvim` 配置迁移到更轻、更容易排错的 Neovim 配置的人。
-- 希望保留代码补全、跳转定义、hover、重命名、诊断等基础 IDE 能力的人。
-- 使用 M 系列芯片 Mac 作为主力开发机的人。
-- 想把旧配置和新配置完全区分开，重新安装一套干净 Neovim 环境的人。
+从复杂臃肿的 coc.nvim 配置中剥离，保留 Colemak 手感、代码补全、常用编辑增强，移除容易在插件更新后报错的链路。**稳定 > 丰富**。
 
-## 适用平台
+<br />
 
-主要适配：
-
-- macOS（Apple Silicon）
-- Neovim 0.11+
-
-Linux 也可用，但测试和路径设计以 macOS 为主。
-
-## 软件要求
-
-必需：
-
-- Neovim 0.11 或更新版本
-- `git`
-- `curl`
-
-推荐（用于安装 language server）：
-
-- Homebrew
-- Node.js / npm
-- Go（用于 `gopls`）
-- `clangd`（C/C++ 支持）
-- Python 3
-
-检查环境：
+## 快速开始
 
 ```sh
-nvim --version
-git --version
-curl --version
-node --version
-go version
-clangd --version
-```
-
-## 安装方式
-
-### 1. 备份旧配置
-
-```sh
+# 1. 备份旧配置
 mv ~/.config/nvim ~/.config/nvim.bak
-```
 
-### 2. 放入新配置
+# 2. 放入新配置
+cp -r . ~/.config/nvim
 
-```sh
-mkdir -p ~/.config/nvim
-cp init.vim ~/.config/nvim/init.vim
-```
-
-### 3. 第一次启动
-
-```sh
+# 3. 启动（lazy.nvim 自动安装所有插件）
 nvim
+
+# 4. 重启后安装核心语言服务器
+nvim +LiteLspInstallCore
 ```
 
-lazy.nvim 会自动克隆自己，然后安装所有插件，全程无需手动操作。
+首次启动时还会自动安装 `fd`（FZF 文件搜索加速器，需 Homebrew）。
 
-### 4. 安装核心 LSP
+<br />
 
-插件安装完成后重启 Neovim，然后执行：
+## 特性一览
+
+| 特性 | 说明 |
+|------|------|
+| **Colemak 原生键位** | `u/e/n/i` 方向移动，无需切换键位 |
+| **即搜即得** | `<C-p>` FZF + fd 项目文件搜索；`<Leader>fh` 全屋搜索 |
+| **实时预览** | `F7` Markdown 预览；`ts` 单词翻译 |
+| **代码片段** | `<Leader>sn` 按文件类型创建；保存即生效 |
+| **智能补全** | nvim-cmp + LuaSnip，`<C-e>/<C-p>` 占位符跳转 |
+| **文件管理器** | `<Leader>y` Yazi 浮动窗口，ranger 风格 |
+| **原生 LSP** | 内置 18 种语言服务器配置，用完才加载 |
+| **一键注释** | `Ctrl+/` 注释/取消注释当前行或选区 |
+| **零焦虑升级** | `:Lazy` 管理所有插件，版本锁定 |
+
+<br />
+
+## 使用栈
+
+### 编辑器
+- **[Neovim](https://neovim.io/) 0.11+** — 核心编辑器
+- **[lazy.nvim](https://github.com/folke/lazy.nvim)** — 插件管理（自动懒加载）
+- **[nvim-cmp](https://github.com/hrsh7th/nvim-cmp)** — 补全引擎
+- **[LuaSnip](https://github.com/L3MON4D3/LuaSnip)** — 代码片段引擎（自定义片段自动重载）
+
+### 语言服务
+- **[Mason](https://github.com/mason-org/mason.nvim)** — LSP 安装器
+- Neovim 原生 LSP 框架 — 零外部框架依赖
+- 内置：Lua、Python、TypeScript、Go、C/C++、Rust、Dart、Swift、Java、C#、Terraform 等
+
+### 工具链
+- **[fd](https://github.com/sharkdp/fd)** — 文件搜索（比 find 快 10×）
+- **[fzf](https://github.com/junegunn/fzf)** — 模糊搜索
+- **[Yazi](https://yazi-rs.github.io/)** — 终端文件管理器
+- **[Marksman](https://github.com/artempyanykh/marksman)** — Markdown LSP
+
+<br />
+
+<p align="center">
+  <img src="assets/tab.gif" alt="代码补全与 Snippet 展开演示" width="720">
+</p>
+
+## 补全与片段
+
+### 快捷键
+
+| 按键 | 功能 |
+|------|------|
+| `<Tab>` | 触发补全 / 菜单向下选择 |
+| `<C-n>` | 补全菜单向下选择 |
+| `<C-p>` | 补全菜单向上选择 / 无菜单时跳转上一个占位符 |
+| `<C-e>` | 展开片段 / 跳转到下一个占位符 |
+| `<CR>` | 确认补全 |
+
+### 使用流程
+
+```
+输入 mai → <Tab> 触发 → 选中 main → <CR> 确认
+        → 片段展开 → <C-e> 跳占位符 → 输入覆盖默认值
+        → <C-p> 跳回上一个占位符
+```
+
+### 自定义片段
 
 ```vim
-:LiteLspInstallCore
+<Leader>sn   " 按当前文件类型自动打开对应的 .snippets 文件
 ```
 
-这个命令会通过 Mason 安装：
+保存文件后**立即生效**，无需重启。支持 SnipMate / VSCode / Lua 三种格式。
 
-```text
-lua-language-server
-pyright
-typescript-language-server
-html-lsp
-css-lsp
-json-lsp
-gopls
-clangd
-bash-language-server
+内置片段文件：
+- `cpp.snippets` — 20 个（main/cout/fori/class/Test/…）
+- `python.snippets` — 14 个（def/class/async/try/…）
+- `java.snippets` — 19 个（class/method/override/…）
+- `typescript.snippets` — 21 个（interface/type/async/…）
+- `javascript.snippets` — 13 个（af/forof/import/…）
+- `sh.snippets` — 19 个（case/getopt/trap/…）
+
+<br />
+
+## 常用快捷键
+
+### Colemak 基础
+
+| 按键 | 功能 |
+|------|------|
+| `u/e/n/i` | 上 / 下 / 左 / 右 |
+| `U/E/N/I` | 上移5行 / 下移5行 / 行首 / 行尾 |
+| `k` = 插入 | `K` = 行首插入 |
+| `l` = 撤销 | `Y` = 复制到剪贴板 |
+| `;` = 命令行 | `Q` = 退出 |
+| `S` = 保存 | `<Leader>rc` = 编辑配置 |
+
+### 文件与搜索
+
+| 按键 | 功能 |
+|------|------|
+| `<C-p>` | 搜索当前项目文件（受 pwd 限制） |
+| `<Leader>fh` | 搜索整个家目录 |
+| `<C-f>` | 全文件内容搜索（ripgrep） |
+| `<Leader>y` | 打开 Yazi 文件管理器 |
+
+### Markdown 与写作
+
+| 按键 | 功能 |
+|------|------|
+| `F7` / `F8` | 打开 / 关闭浏览器预览 |
+| `<Leader>sc` | 开关拼写检查 |
+| `<Leader>tm` | Table 模式开关 |
+
+<p align="center">
+  <img src="assets/markdown.gif" alt="Markdown 实时预览演示" width="720">
+</p>
+
+### 开发辅助
+
+| 按键 | 功能 |
+|------|------|
+| `ts` | 翻译光标下单词 |
+| `L` | 打开撤销树 |
+| `Ctrl+/` | 注释/取消注释 |
+| `gd` | 跳转到定义 |
+| `gr` | 查找引用 |
+| `<Leader>h` | 查看文档（Hover） |
+| `<Leader>rn` | 重命名 |
+| `<Leader>a` | Code action |
+| `<Leader>lf` | 格式化 |
+
+### 窗口与 Tab
+
+| 按键 | 功能 |
+|------|------|
+| `su/e/n/i` | 上/下/左/右 分屏 |
+| `<Leader>w` | 切换窗口 |
+| `tu` / `td` | 新建 tab / 关闭 tab |
+| `tn` / `ti` | 上一个 / 下一个 tab |
+
+<br />
+
+## Yazi 文件管理器
+
+<p align="center">
+  <img src="assets/yazi.gif" alt="Yazi 文件管理器演示" width="720">
+</p>
+
+| 按键 | 功能 |
+|------|------|
+| `u` / `e` | 上 / 下移动 |
+| `n` | 返回上级目录 |
+| `i` | 进入目录或文件 |
+| `<Space>` | 多选文件 |
+| `dd` / `yy` / `pp` | 剪切 / 复制 / 粘贴 |
+| `f` | 过滤 |
+| `/` | 搜索 |
+| `<C-p>` | fzf 跳转 |
+| `q` | 关闭 |
+
+需要先安装：
+```sh
+brew install yazi
 ```
 
-查看 Mason 进度：
-
-```vim
-:Mason
-:MasonLog
-```
-
-### 5. 验证
-
-```vim
-:LspEnabled
-:LspMissing
-:LspInfo
-```
-
-## 插件管理
-
-本配置使用 `lazy.nvim` 管理插件。
-
-```vim
-:Lazy            " 打开管理面板（查看、更新、回滚）
-:Lazy update     " 更新所有插件
-:Lazy install    " 安装新插件
-:Lazy clean      " 清理未使用的插件
-```
-
-插件安装目录：
-
-```text
-~/.local/share/nvim/lazy/
-```
-
-版本锁文件是 `lazy-lock.json`，建议纳入 git 管理，保证多机安装的插件版本一致。
-
-## Markdown 预览
-
-```text
-F7       打开浏览器预览（Chrome）
-F8       关闭预览
-```
-
-打开 `.md` 文件后会自动弹出预览，编辑内容时实时刷新。首次安装时插件会自动下载预编译二进制，无需 Node.js 或 yarn。
-
-## 功能亮点
-
-- 保留 Colemak 风格方向键：`u/n/e/i` 对应上/左/下/右。
-- 不加载 `coc.nvim`，避免 Coc 扩展更新导致启动报错。
-- 使用 Neovim 内置 LSP，减少外部框架依赖。
-- 使用 `nvim-cmp` 提供补全菜单。
-- 使用 Mason 安装和管理 language server。
-- 支持 C/C++、Go、Python、TypeScript/JavaScript、HTML、CSS、JSON、Lua、Bash 等核心语言。
-- 提供 `:LspEnabled`、`:LspMissing`、`:LspInfo` 三个检查命令。
-- 插件配置以轻量编辑体验为主，默认关闭 Copilot、Treesitter、gitsigns、文件管理器等较重功能。
-- 支持 `~/.config/nvim/local.vim` 做本地开关和机器特定配置。
-- 保留原配置中的窗口管理、tab 管理、Markdown、注释、surround、undotree、多光标等常用操作。
-
-## 默认插件分类
-
-### 补全和 LSP
-
-```text
-hrsh7th/nvim-cmp
-hrsh7th/cmp-nvim-lsp
-hrsh7th/cmp-buffer
-hrsh7th/cmp-path
-hrsh7th/cmp-cmdline
-mason-org/mason.nvim
-```
-
-### 视觉和基础增强
-
-```text
-theniceboy/nvim-deus          (colorscheme)
-theniceboy/eleline.vim        (statusline)
-itchyny/vim-cursorword
-RRethy/vim-illuminate
-airblade/vim-rooter
-```
-
-### 查找和导航
-
-```text
-junegunn/fzf
-junegunn/fzf.vim
-pechorin/any-jump.vim
-```
-
-### 文件类型支持
-
-```text
-elzr/vim-json
-neoclide/jsonc.vim
-othree/html5.vim
-alvan/vim-closetag
-pangloss/vim-javascript
-MaxMEllon/vim-jsx-pretty
-leafgarland/typescript-vim
-peitalin/vim-jsx-typescript
-styled-components/vim-styled-components
-pantharshit00/vim-prisma
-fatih/vim-go
-Vimjas/vim-python-pep8-indent
-tweekmonster/braceless.vim
-dart-lang/dart-vim-plugin
-keith/swift.vim
-arzg/vim-swift
-wlangstroth/vim-racket
-hashivim/vim-terraform
-```
-
-### 文本编辑
-
-```text
-mbbill/undotree
-jiangmiao/auto-pairs
-mg979/vim-visual-multi
-theniceboy/tcomment_vim
-tpope/vim-surround
-gcmt/wildfire.vim
-junegunn/vim-after-object
-godlygeek/tabular
-tpope/vim-capslock
-svermeulen/vim-subversive
-theniceboy/argtextobj.vim
-rhysd/clever-f.vim
-AndrewRadev/splitjoin.vim
-theniceboy/pair-maker.vim
-theniceboy/vim-move
-Yggdroot/indentLine
-```
-
-### Markdown 和写作
-
-```text
-dhruvasagar/vim-table-mode
-mzlogin/vim-markdown-toc
-iamcco/markdown-preview.nvim    (实时预览, F7/F8)
-dkarter/bullets.vim
-junegunn/goyo.vim
-reedes/vim-wordy
-```
+<br />
 
 ## LSP 支持
 
-配置中内置了以下 language server 配置。只有当对应命令存在时才会启用。
-
-| 语言 | LSP 名称 | 检测命令 |
-| --- | --- | --- |
-| Lua | `lua_ls` | `lua-language-server` |
-| Python | `pyright` | `pyright-langserver` |
-| TypeScript / JavaScript | `ts_ls` | `typescript-language-server` |
-| HTML | `html` | `vscode-html-language-server` |
-| CSS / SCSS / Less | `cssls` | `vscode-css-language-server` |
-| JSON / JSONC | `jsonls` | `vscode-json-language-server` |
-| Bash / Shell | `bashls` | `bash-language-server` |
-| YAML | `yamlls` | `yaml-language-server` |
-| Go | `gopls` | `gopls` |
-| C / C++ / Objective-C | `clangd` | `clangd` |
-| Rust | `rust_analyzer` | `rust-analyzer` |
-| Dart | `dartls` | `dart` |
-| Swift | `sourcekit` | `sourcekit-lsp` |
-| Prisma | `prismals` | `prisma-language-server` |
-| Terraform | `terraformls` | `terraform-ls` |
-| Markdown | `marksman` | `marksman` |
-| Java | `jdtls` | `jdtls` |
-| C# | `omnisharp` | `omnisharp` 或 `OmniSharp` |
-
-检查当前机器可启用的 LSP：
+| 语言                    | LSP                 | 安装方式         |
+|-------------------------|---------------------|------------------|
+| Lua                     | lua-language-server | Mason / Homebrew |
+| Python                  | pyright             | Mason / npm      |
+| TypeScript / JavaScript | ts_ls               | Mason / npm      |
+| Go                      | gopls               | Mason / Go       |
+| C/C++                   | clangd              | Mason / Homebrew |
+| Rust                    | rust-analyzer       | Rustup           |
+| Java                    | jdtls               | Mason            |
+| C#                      | omnisharp           | Homebrew         |
+| 更多…                   | 见 init.vim         |                  |
 
 ```vim
-:LspEnabled
+:LspEnabled   " 检查启用的 LSP
+:LspMissing   " 检查缺失的 LSP
+:LspInfo      " 当前 buffer 的 LSP
 ```
 
-检查缺失的 LSP 命令：
+<br />
+
+## 本地覆盖
+
+创建 `~/.config/nvim/local.vim` 启用可选功能：
 
 ```vim
-:LspMissing
+let g:lite_enable_copilot = 1        " GitHub Copilot
+let g:lite_enable_treesitter = 1     " Treesitter 高亮
+let g:lite_enable_lua_extras = 1     " gitsigns, colorizer, spectre
+let g:lite_enable_file_managers = 1  " lazygit, rnvimr
 ```
 
-检查当前 buffer 已 attach 的 LSP：
-
-```vim
-:LspInfo
-```
-
-## 补全操作
-
-插入模式下：
-
-| 快捷键 | 功能 |
-| --- | --- |
-| `<Tab>` | 选择下一个补全项，或触发补全 |
-| `<S-Tab>` | 选择上一个补全项 |
-| `<CR>` | 确认补全 |
-| `<C-Space>` | 手动触发补全 |
-| `<C-e>` | 关闭补全菜单 |
-| `<C-d>` | 补全文档向下滚动 |
-| `<C-u>` | 补全文档向上滚动 |
-
-## LSP 快捷键
-
-以下快捷键在 LSP attach 到当前 buffer 后生效。
-
-| 快捷键 | 功能 |
-| --- | --- |
-| `gd` | 跳转到定义 |
-| `gD` | 新 tab 中跳转到定义 |
-| `gy` | 跳转到类型定义 |
-| `gr` | 查找引用 |
-| `<Leader>rn` | 重命名 |
-| `<Leader>a` | Code action |
-| `<Leader>h` | Hover 文档 |
-| `<Leader>d` | 将诊断放入 location list |
-| `<Leader>-` | 上一个诊断 |
-| `<Leader>=` | 下一个诊断 |
-| `<Leader>lf` | 格式化当前 buffer |
-
-`<Leader>` 是空格键。
-
-## Colemak 快捷键
-
-### 基础操作
-
-| 快捷键 | 功能 |
-| --- | --- |
-| `;` | 进入命令行模式，相当于 `:` |
-| `S` | 保存 |
-| `Q` | 退出 |
-| `<Leader>rc` | 编辑当前 Neovim 配置 |
-| `<Leader>rv` | 编辑当前目录下 `.nvimrc` |
-| `k` | 插入，相当于原生 `i` |
-| `K` | 行首插入，相当于原生 `I` |
-| `l` | 撤销，相当于原生 `u` |
-| `Y` | 可视模式复制到系统剪贴板 |
-| `,.` | 匹配括号跳转 |
-| `<Leader><CR>` | 取消搜索高亮 |
-| `<Leader>dw` | 查找相邻重复单词 |
-| `<Leader>tt` | 将 4 个空格替换为 tab |
-| `<Leader>o` | 打开或关闭当前折叠 |
-| `<C-y>` | 插入 `{}` 并进入中间新行 |
-
-### 光标移动
-
-| 快捷键 | 功能 |
-| --- | --- |
-| `u` | 上 |
-| `n` | 左 |
-| `e` | 下 |
-| `i` | 右 |
-| `U` | 上移 5 行 |
-| `E` | 下移 5 行 |
-| `N` | 行首 |
-| `I` | 行尾 |
-| `gu` | 按屏幕行上移 |
-| `ge` | 按屏幕行下移 |
-| `W` | 后移 5 个 word |
-| `B` | 前移 5 个 word |
-| `h` | 到 word 结尾 |
-| `<C-U>` | 视窗向上滚动 |
-| `<C-E>` | 视窗向下滚动 |
-
-## 窗口和 Tab 管理
-
-### 窗口
-
-| 快捷键 | 功能 |
-| --- | --- |
-| `<Leader>w` | 切换窗口 |
-| `<Leader>u` | 切到上方窗口 |
-| `<Leader>e` | 切到下方窗口 |
-| `<Leader>n` | 切到左侧窗口 |
-| `<Leader>i` | 切到右侧窗口 |
-| `qf` | 只保留当前窗口 |
-| `su` | 向上创建水平分屏 |
-| `se` | 向下创建水平分屏 |
-| `sn` | 向左创建垂直分屏 |
-| `si` | 向右创建垂直分屏 |
-| `<Up>` | 增加窗口高度 |
-| `<Down>` | 减少窗口高度 |
-| `<Left>` | 减少窗口宽度 |
-| `<Right>` | 增加窗口宽度 |
-| `sh` | 改为上下布局 |
-| `sv` | 改为左右布局 |
-| `srh` | 旋转为上下布局 |
-| `srv` | 旋转为左右布局 |
-| `<Leader>q` | 关闭当前窗口下方窗口 |
-
-### Tab
-
-| 快捷键 | 功能 |
-| --- | --- |
-| `tu` | 新建 tab |
-| `tU` | 当前窗口复制到新 tab |
-| `tn` | 上一个 tab |
-| `ti` | 下一个 tab |
-| `tmn` | 当前 tab 左移 |
-| `tmi` | 当前 tab 右移 |
-
-## 文本和 Markdown 快捷键
-
-| 快捷键 | 功能 |
-| --- | --- |
-| `F7` | 打开浏览器预览 Markdown |
-| `F8` | 关闭 Markdown 预览 |
-| `<Leader><Leader>` | 跳到下一个 `<++>` 占位符并编辑 |
-| `<Leader>sc` | 开关拼写检查 |
-| `` ` `` | 切换大小写 |
-| `<C-c>` | 当前行居中 |
-| `\s` | 快速进入全文替换 |
-| `<Leader>sw` | 开关自动换行 |
-| `\p` | 显示当前文件完整路径 |
-| `<Leader>tm` | Table Mode 开关 |
-| `ga` | 可视模式下 Tabular 对齐 |
-| `<Leader>cn` | 注释 |
-| `<Leader>cu` | 取消注释 |
-| `L` | 打开撤销树 |
-| `<C-b>` | wildfire 快速选择 |
-
-## 常用检查命令
-
-```vim
-:echo $MYVIMRC          " 确认配置路径
-:messages               " 查看启动消息
-:Lazy                   " 打开 lazy.nvim 管理面板
-:Mason                  " 查看 Mason 状态
-:checkhealth            " 健康检查
-:LspEnabled             " 查看启用的 LSP
-:LspMissing             " 查看缺失的 LSP
-:LspInfo                " 查看当前 buffer 的 LSP
-```
-
-## 本地覆盖配置
-
-创建 `~/.config/nvim/local.vim`，在插件声明前被读取。
-
-启用 Copilot：
-
-```vim
-let g:lite_enable_copilot = 1
-```
-
-启用 Treesitter：
-
-```vim
-let g:lite_enable_treesitter = 1
-```
-
-启用 gitsigns、hlslens、colorizer、spectre：
-
-```vim
-let g:lite_enable_lua_extras = 1
-```
-
-启用 lazygit、joshuto、rnvimr：
-
-```vim
-let g:lite_enable_file_managers = 1
-```
-
-关闭 Mason：
-
-```vim
-let g:lite_enable_mason = 0
-```
+<br />
 
 ## 常见问题
 
-### 1. `:Lazy` 不存在
-
-说明 lazy.nvim 安装失败。检查网络连接后重新启动 nvim，或手动克隆：
-
-```sh
-git clone --filter=blob:none --branch=stable https://github.com/folke/lazy.nvim.git ~/.local/share/nvim/lazy/lazy.nvim
-```
-
-### 2. `:LspMissing` 里有很多语言
-
-这只是表示这些 language server 当前机器没装。不写对应语言可以忽略。
-
-### 3. 无法安装 `gopls`
-
-如果提示 Go 版本过低：
-
-```sh
-go env -w GOTOOLCHAIN=auto
-```
-
-然后重试：
-
-```vim
-:MasonUninstall gopls
-:MasonInstall gopls
-```
-
-### 4. Markdown 预览不工作（F7 无反应）
-
-运行：
-
-```vim
-:checkhealth markdown-preview
-```
-
-或者手动重新安装二进制：
-
+**Q: 打开 Markdown 文件后没有自动预览？**
 ```sh
 cd ~/.local/share/nvim/lazy/markdown-preview.nvim/app && bash install.sh
 ```
 
-### 5. C++ 有补全，但 `:LspMissing` 还有内容
-
-正常。C++ 用 `clangd`，只要 `:LspInfo` 能看到它就说明工作。
-
-## 设计取舍
-
-这份配置刻意没有默认启用：
-
-- `coc.nvim`
-- Copilot
-- Treesitter
-- gitsigns
-- nvim-spectre
-- lazygit
-- rnvimr
-- joshuto
-
-原因是它们都更容易受到 Node、Lua、外部二进制、插件更新或系统 PATH 的影响。默认配置优先保证启动稳定、补全可用、编辑顺手；需要更强功能时再通过 `local.vim` 打开。
-
-## 总结
-
-这是一份轻量但可写代码的 Neovim 配置。它不是完整 IDE 大而全方案，而是一套稳定、易排错、保留 Colemak 手感的主力开发配置。
-
-安装路径：
-
-```text
-~/.config/nvim/init.vim
-```
-
-首次安装流程：
-
-```sh
-mkdir -p ~/.config/nvim
-cp init.vim ~/.config/nvim/init.vim
-nvim                    # lazy.nvim 自动安装所有插件
-# 重启 nvim
-:LiteLspInstallCore     # 安装核心 language server
-```
-
-最终验收：
-
+**Q: LSP 不工作？**
 ```vim
-:Lazy
-:LspEnabled
-:LspInfo
+:LspMissing         " 看哪些没装
+:checkhealth        " 健康检查
 ```
+
+**Q: Yazi 打不开？**
+```sh
+brew install yazi
+```
+
+**Q: FZF 搜索比较慢？**
+配置会在启动时自动安装 `fd`。也可以手动：
+```sh
+brew install fd
+```
+
+<br />
+
+## 设计理念
+
+- **稳定优先** — 不默认启用 Copilot、Treesitter 等可能受外部环境影响的功能
+- **键盘流** — 所有操作不离键盘，Colemak 键位贯穿始终
+- **轻量可排错** — 配置结构清晰，问题能快速定位
+- **新机器友好** — git clone → nvim → 走人，自动装依赖无手工步骤
+
+<br />
+
+## 致谢
+
+特别感谢 **[theniceboy](https://github.com/theniceboy)** — 这份配置中的大部分插件选择、键位设计和编辑增强细节，都来自在他的项目中学习到的经验。他的代码让我对 Vim 配置的灵活性有了更深入的理解。
+
+<br />
+
+## 许可证
+
+MIT License. See `LICENSE` for more information.
+
+<br />
+
+---
+
+<p align="center">
+  由 init.vim + lazy.nvim + ❤️ 驱动
+</p>
