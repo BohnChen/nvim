@@ -322,7 +322,6 @@ syntax enable
 silent! runtime macros/matchit.vim
 
 let &t_ut = ''
-set autochdir
 set exrc
 set secure
 set number
@@ -356,7 +355,8 @@ set lazyredraw
 set noerrorbells
 set novisualbell
 set t_vb=
-set updatetime=300
+set updatetime=1000
+set autoread
 set virtualedit=block
 set timeout
 set timeoutlen=700
@@ -394,12 +394,13 @@ endif
 augroup lite_core
   autocmd!
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif
-  autocmd BufEnter * silent! lcd %:p:h
   autocmd BufWritePost init.vim,.nvimrc nested source $MYVIMRC
   autocmd TermOpen term://* startinsert
   autocmd BufRead,BufNewFile *.md,*.markdown setlocal spell
   autocmd FileType markdown ++nested lua vim.fn.timer_start(400, function() pcall(vim.cmd, "MarkdownPreview") end)
   autocmd BufRead,BufNewFile tsconfig.json setlocal filetype=jsonc
+  autocmd FocusGained,CursorHold * if getbufvar(bufnr('%'), '&modified') == 0 | checktime | endif
+  autocmd FileChangedShell * nested if &modified | let v:fcs_choice = '' | else | let v:fcs_choice = 'reload' | endif
 augroup END
 
 " ---------------------------------------------------------------------------
@@ -454,6 +455,7 @@ noremap <C-U> 5<C-y>
 noremap <C-E> 5<C-e>
 
 inoremap <C-a> <Esc>A
+inoremap <C-l> <Esc>ia
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-p> <Up>
