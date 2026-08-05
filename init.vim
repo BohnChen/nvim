@@ -399,8 +399,6 @@ augroup lite_core
   autocmd BufRead,BufNewFile *.md,*.markdown setlocal spell
   autocmd FileType markdown ++nested lua vim.fn.timer_start(400, function() pcall(vim.cmd, "MarkdownPreview") end)
   autocmd BufRead,BufNewFile tsconfig.json setlocal filetype=jsonc
-  autocmd FocusGained,CursorHold * if getbufvar(bufnr('%'), '&modified') == 0 | checktime | endif
-  autocmd FileChangedShell * nested if &modified | let v:fcs_choice = '' | else | let v:fcs_choice = 'reload' | endif
 augroup END
 
 " ---------------------------------------------------------------------------
