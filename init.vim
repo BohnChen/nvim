@@ -204,6 +204,10 @@ local plugins = {
     event = { "BufEnter", "TabNew", "TabEnter" },
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
+      -- tab 名只显示文件名（不显示完整路径），避免标签过长
+      require("tabby.feature.win_name").set_default_option({
+        mode = "tail",
+      })
       require("tabby").setup({
         tabline = require("tabby.tabline").use_preset("tab_only", {
           -- 每个标签独立底色，现代 IDE 风格

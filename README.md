@@ -58,6 +58,7 @@ nvim +LiteLspInstallCore
 | **代码片段** | `<Leader>sn` 按文件类型创建；保存即生效 |
 | **智能补全** | nvim-cmp + LuaSnip，`<C-e>/<C-p>` 占位符跳转 |
 | **文件管理器** | `<Leader>y` Yazi 浮动窗口，ranger 风格 |
+| **标签页美化** | tabby.nvim，`tu` 新建、序号+文件名+高亮 |
 | **原生 LSP** | 内置 18 种语言服务器配置，用完才加载 |
 | **一键注释** | `Ctrl+/` 注释/取消注释当前行或选区 |
 | **零焦虑升级** | `:Lazy` 管理所有插件，版本锁定 |
@@ -71,6 +72,8 @@ nvim +LiteLspInstallCore
 - **[lazy.nvim](https://github.com/folke/lazy.nvim)** — 插件管理（自动懒加载）
 - **[nvim-cmp](https://github.com/hrsh7th/nvim-cmp)** — 补全引擎
 - **[LuaSnip](https://github.com/L3MON4D3/LuaSnip)** — 代码片段引擎（自定义片段自动重载）
+- **[tabby.nvim](https://github.com/nanozuki/tabby.nvim)** — 标签页美化（原生 tabpage 工作区）
+- **[vim-translator](https://github.com/voldikss/vim-translator)** — 单词翻译（`ts`）
 
 ### 语言服务
 - **[Mason](https://github.com/mason-org/mason.nvim)** — LSP 安装器
@@ -181,8 +184,13 @@ nvim +LiteLspInstallCore
 |------|------|
 | `su/e/n/i` | 上/下/左/右 分屏 |
 | `<Leader>w` | 切换窗口 |
-| `tu` / `td` | 新建 tab / 关闭 tab |
-| `tn` / `ti` | 上一个 / 下一个 tab |
+| `tu` | 新建标签页 |
+| `tU` | 当前窗口复制到新标签页 |
+| `tn` / `ti` | 上一个 / 下一个标签页 |
+| `tmn` / `tmi` | 当前标签页左移 / 右移 |
+| `:tabclose` 或 `:q` | 关闭当前标签页 |
+
+标签栏由 **tabby.nvim** 美化：每个标签显示序号 + 文件名，当前标签高亮，底色块跟随主题。
 
 <br />
 
