@@ -197,8 +197,25 @@ local plugins = {
   { "skywind3000/asynctasks.vim" },
   { "skywind3000/asyncrun.vim" },
   { "luochen1990/rainbow" },
-  { "mg979/vim-xtabline" },
   { "wincent/terminus" },
+
+  -- 标签页美化（原生 tabpage 工作区，替代 vim-xtabline）
+  { "nanozuki/tabby.nvim",
+    event = { "BufEnter", "TabNew", "TabEnter" },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("tabby").setup({
+        tabline = require("tabby.tabline").use_preset("tab_only", {
+          -- 每个标签独立底色，现代 IDE 风格
+          theme = "expand",
+          -- 显示 tab 序号
+          tab_component = function(tab_id)
+            return require("tabby.feature.tab_number").component(tab_id)
+          end,
+        }),
+      })
+    end,
+  },
   { "lambdalisue/suda.vim" },
 
   -- 翻译插件（光标在单词上按 st 显示含义）
@@ -622,11 +639,6 @@ let g:dart_format_on_save = v:false
 let g:Illuminate_delay = 750
 hi illuminatedWord cterm=undercurl gui=undercurl
 
-let g:xtabline_settings = {}
-let g:xtabline_settings.enable_mappings = 0
-let g:xtabline_settings.tabline_modes = ['tabs', 'buffers']
-let g:xtabline_settings.enable_persistance = 0
-let g:xtabline_settings.last_open_first = 1
 
 cnoreabbrev sudowrite w suda://%
 cnoreabbrev sw w suda://%
@@ -657,9 +669,6 @@ function! s:SafePluginMaps() abort
   endif
   if exists(':Goyo') == 2
     nnoremap <Leader>gy :Goyo<CR>
-  endif
-  if exists(':XTabCycleMode') == 2
-    nnoremap to :XTabCycleMode<CR>
   endif
   if exists(':Agit') == 2
     nnoremap <Leader>gl :Agit<CR>
