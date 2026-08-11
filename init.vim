@@ -460,6 +460,7 @@ noremap <silent> u k
 noremap <silent> n h
 noremap <silent> e j
 noremap <silent> i l
+vnoremap <nowait> <silent> i l
 noremap <silent> gu gk
 noremap <silent> ge gj
 noremap <silent> \v v$h
@@ -694,7 +695,7 @@ function! s:SafePluginMaps() abort
     call after_object#enable('=', ':', '-', '#', ' ')
   endif
   if maparg('<Plug>(wildfire-quick-select)', 'n') !=# ''
-    map <C-b> <Plug>(wildfire-quick-select)
+    map <Enter> <Plug>(wildfire-quick-select)
   endif
   if maparg('<Plug>(SubversiveSubstitute)', 'n') !=# ''
     nmap s <Plug>(SubversiveSubstitute)
