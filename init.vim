@@ -526,7 +526,8 @@ noremap <Leader><Leader> <Esc>/<++><CR>:nohlsearch<CR>"_c4l
 noremap <Leader>sc :setlocal spell!<CR>
 noremap ` ~
 noremap <C-c> zz
-noremap \s :%s//g<Left><Left>
+nnoremap \s :%s//g<Left><Left>
+vnoremap \s :s//g<Left><Left>
 noremap <Leader>sw :set wrap!<CR>
 " <Leader>sn 根据当前文件类型自动打开对应的 snippets 文件编辑
 nnoremap <Leader>sn :lua _G.edit_current_snippets()<CR>
@@ -695,7 +696,7 @@ function! s:SafePluginMaps() abort
     call after_object#enable('=', ':', '-', '#', ' ')
   endif
   if maparg('<Plug>(wildfire-quick-select)', 'n') !=# ''
-    map <Enter> <Plug>(wildfire-quick-select)
+    map <Enter> <Plug>(wildfire-fuel)
   endif
   if maparg('<Plug>(SubversiveSubstitute)', 'n') !=# ''
     nmap s <Plug>(SubversiveSubstitute)

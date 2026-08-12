@@ -44,12 +44,16 @@ snippet while
 
 snippet class
 	class ${1:Name} {
-	 public:
-		${1:Name}() = default;
-	 	~${1:Name}() = default;
-
-	 private:
 		${2}
+	public:
+		${1:Name}()${3} {
+
+		}
+		~${1:Name}() {
+
+		}
+		${4}
+
 	};
 
 snippet struct
@@ -57,8 +61,11 @@ snippet struct
 		${2}
 	};
 
-snippet in
+snippet io
 	#include <${1:iostream}>
+
+snippet str
+	#include <${1:string}>
 
 snippet min
 	#include "${1:header}.h"
@@ -68,7 +75,7 @@ snippet ns
 		${2}
 	} // namespace ${1:name}
 
-snippet using
+snippet us
 	using namespace ${1:std};
 
 snippet log
@@ -82,16 +89,6 @@ snippet func
 		${4}
 	}
 
-snippet Test
-	TEST(${1:Suite}, ${2:TestName}) {
-		${3}
-	}
-
 snippet once
 	#pragma once
 
-snippet bohn
-	int ${1:bohn};
-
-snippet testvim
-	int ${1:nice};
