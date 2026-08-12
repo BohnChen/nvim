@@ -475,7 +475,7 @@ noremap <C-U> 5<C-y>
 noremap <C-E> 5<C-e>
 
 inoremap <C-a> <Esc>A
-inoremap <C-l> <Esc>ia
+inoremap <C-t> <Esc>ia
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-p> <Up>
@@ -782,7 +782,7 @@ if has_cmp then
         end
       end, { 'i', 's' }),
       -- 回车确认补全
-      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+      ['<CR>'] = cmp.mapping.confirm({ select = false }),
       -- Tab 触发补全 / 向下选择
       ['<Tab>'] = cmp.mapping(function(fallback)
         if cmp.visible() then
