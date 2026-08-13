@@ -73,6 +73,7 @@ nvim +LiteLspInstallCore
 - **[nvim-cmp](https://github.com/hrsh7th/nvim-cmp)** — 补全引擎
 - **[LuaSnip](https://github.com/L3MON4D3/LuaSnip)** — 代码片段引擎（自定义片段自动重载）
 - **[tabby.nvim](https://github.com/nanozuki/tabby.nvim)** — 标签页美化（原生 tabpage 工作区）
+- **[conform.nvim](https://github.com/stevearc/conform.nvim)** — 代码格式化（保存自动格式化，`<Leader>lf` 手动触发）
 - **[vim-translator](https://github.com/voldikss/vim-translator)** — 单词翻译（`ts`）
 
 ### 语言服务

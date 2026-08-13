@@ -15,9 +15,10 @@
   "cmp-nvim-lsp": { "branch": "main", "commit": "cbc7b02bb99fae35cb42f514762b89b5126651ef" },
   "cmp-path": { "branch": "main", "commit": "c642487086dbd9a93160e1679a1327be111cbc25" },
   "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
+  "conform.nvim": { "branch": "master", "commit": "016802de402556da54c36bd7359b441266b01cdd" },
   "dart-vim-plugin": { "branch": "master", "commit": "13fa42674f1685a1c5a095c1dac74d94e43a9849" },
   "eleline.vim": { "branch": "no-scrollbar", "commit": "14b96f36c1e2370e8d92a59ec5f68272d34519ae" },
-  "fzf": { "branch": "master", "commit": "715d26fa3949c9a0f1e41fcbda5440f3ac338e51" },
+  "fzf": { "branch": "master", "commit": "ca4c1b80e330522df9d768ed3139154721c6d14b" },
   "fzf.vim": { "branch": "master", "commit": "d2a59a992a2455f609c0fde2ebd84427ea8f919a" },
   "goyo.vim": { "branch": "master", "commit": "9c72fdf2d202914318581f9f0dd09fd102f8504d" },
   "html5.vim": { "branch": "master", "commit": "485f2cd62162c81e56d8604b4c630f0b5ef69d1f" },
@@ -70,5 +71,5 @@
   "vim-visual-multi": { "branch": "master", "commit": "a6975e7c1ee157615bbc80fc25e4392f71c344d4" },
   "vim-wordy": { "branch": "master", "commit": "590927f57277666e032702b26e4e0c82717cc3cb" },
   "wildfire.vim": { "branch": "master", "commit": "dfcf48aad2e80c63272df67a1b81e37cbc443412" },
-  "yazi.nvim": { "branch": "main", "commit": "7b23cd38a7ff42a591d87a5ad1f6e12d4bafbb3a" }
+  "yazi.nvim": { "branch": "main", "commit": "67ec278144fcadbf31462f7f06a02a5ec8a35de0" }
 }

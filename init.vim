@@ -270,6 +270,28 @@ local plugins = {
       })
     end,
   },
+
+  -- 代码格式化（保存时自动格式化，<Leader>lf 手动触发）
+  { "stevearc/conform.nvim",
+    config = function()
+      require("conform").setup({
+        formatters_by_ft = {
+          c = { "clang_format" },
+          cpp = { "clang_format" },
+          lua = { "stylua" },
+          python = { "isort", "black" },
+          go = { "gofumpt" },
+          rust = { "rustfmt" },
+          javascript = { "prettierd", "prettier" },
+          typescript = { "prettierd", "prettier" },
+          html = { "prettierd", "prettier" },
+          json = { "prettierd", "prettier" },
+          markdown = { "prettierd", "prettier" },
+        },
+        format_on_save = true,
+      })
+    end,
+  },
 }
 
 require("lazy").setup(plugins, {
@@ -1107,7 +1129,12 @@ vim.api.nvim_create_user_command('LiteLspInstallCore', function()
 end, {})
 
 vim.diagnostic.config({
-  virtual_text = { spacing = 2, prefix = '*' },
+  virtual_lines = {
+    current_line = true,
+    format = function(diagnostic)
+      return '* ' .. diagnostic.message
+    end,
+  },
   signs = true,
   underline = true,
   update_in_insert = false,
@@ -1128,7 +1155,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<Leader>d', vim.diagnostic.setloclist, opts)
     vim.keymap.set('n', '<Leader>-', vim.diagnostic.goto_prev, opts)
     vim.keymap.set('n', '<Leader>=', vim.diagnostic.goto_next, opts)
-    vim.keymap.set('n', '<Leader>lf', function() vim.lsp.buf.format({ async = true }) end, opts)
+    vim.keymap.set('n', '<Leader>lf', function() require("conform").format({ async = true }) end, opts)
   end,
 })
 EOF
