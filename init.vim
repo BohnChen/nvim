@@ -481,8 +481,8 @@ nnoremap <silent> - Nzz
 noremap <silent> u k
 noremap <silent> n h
 noremap <silent> e j
-noremap <silent> i l
-vnoremap <nowait> <silent> i l
+nnoremap <silent> i l
+xnoremap o l
 noremap <silent> gu gk
 noremap <silent> ge gj
 noremap <silent> \v v$h
@@ -559,10 +559,11 @@ nnoremap \p :echo expand('%:p')<CR>
 " 注释切换（Ctrl+/）
 " ---------------------------------------------------------------------------
 " 普通模式注释/取消注释当前行，可视模式注释选中行
-nmap <C-/> gcc
+" 支持 count：5<C-/> 注释 5 行（用 :TComment 的 range）
+nnoremap <expr> <C-/> ':.,+' . (v:count1 - 1) . 'TComment<CR>'
 xmap <C-/> gc
-" 兼容终端按键编码
-nmap <C-_> gcc
+" 兼容终端按键编码（<C-/> 与 <C-_> 在终端同键）
+nnoremap <expr> <C-_> ':.,+' . (v:count1 - 1) . 'TComment<CR>'
 xmap <C-_> gc
 
 " ---------------------------------------------------------------------------
