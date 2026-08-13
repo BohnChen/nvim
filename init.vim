@@ -709,7 +709,6 @@ function! s:SafePluginMaps() abort
     nnoremap gp :AsyncRun git push<CR>
   endif
   if exists(':TComment') == 2
-    nnoremap ci cl
     nmap <Leader>cn g>c
     vmap <Leader>cn g>
     nmap <Leader>cu g<c
