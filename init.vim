@@ -497,7 +497,7 @@ noremap <C-U> 5<C-y>
 noremap <C-E> 5<C-e>
 
 inoremap <C-a> <Esc>A
-inoremap <C-t> <Esc>ia
+inoremap <C-t> <Esc>la
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-p> <Up>
