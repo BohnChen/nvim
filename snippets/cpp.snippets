@@ -1,6 +1,7 @@
 snippet main
 	int main(int argc, char *argv[]) {
-		${1:niceday}
+		std::cout << "hello world!" << std::endl;
+		${1}
 		return 0;
 	}
 
@@ -44,7 +45,6 @@ snippet while
 
 snippet class
 	class ${1:Name} {
-		${2}
 	public:
 		${1:Name}()${3} {
 
@@ -54,6 +54,8 @@ snippet class
 		}
 		${4}
 
+	private:
+		${2}
 	};
 
 snippet struct
@@ -92,3 +94,10 @@ snippet func
 snippet once
 	#pragma once
 
+snippet uio
+	using std::cout;
+	using std::cin;
+	using std::endl;
+
+snippet u
+	using ${1:std}::${2:vector};

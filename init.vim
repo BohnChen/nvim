@@ -585,7 +585,7 @@ function! CompileRunCurrentFile() abort
   if &filetype ==# 'c'
     split | resize 12 | terminal gcc % -o %< && time ./%<
   elseif &filetype ==# 'cpp'
-    execute '!g++ -std=c++11 ' . shellescape(expand('%')) . ' -Wall -o ' . shellescape(expand('%<'))
+    execute '!g++ -std=c++17 ' . shellescape(expand('%')) . ' -Wall -o ' . shellescape(expand('%<'))
     split | resize 12 | execute 'terminal ' . shellescape(expand('%<'))
   elseif &filetype ==# 'sh'
     execute '!time bash ' . shellescape(expand('%'))
