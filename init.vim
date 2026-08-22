@@ -1132,7 +1132,20 @@ vim.diagnostic.config({
   virtual_lines = {
     current_line = true,
     format = function(diagnostic)
-      return '* ' .. diagnostic.message
+      local msg = diagnostic.message:gsub('%s+', ' '):gsub('\n', ' ')
+      local width = math.max(40, vim.api.nvim_win_get_width(0) - diagnostic.col - 14)
+      local lines = {}
+      local line = '* '
+      for word in msg:gmatch('%S+') do
+        if #line + 1 + #word > width then
+          lines[#lines + 1] = line
+          line = word
+        else
+          line = line .. ' ' .. word
+        end
+      end
+      lines[#lines + 1] = line
+      return table.concat(lines, '\n')
     end,
   },
   signs = true,
