@@ -8,6 +8,12 @@ snippet main
 snippet cout
 	std::cout << ${1} << std::endl;
 
+snippet co
+	cout << ${1} << endl;
+
+snippet ce
+	cout << endl;
+
 snippet cerr
 	std::cerr << ${1} << std::endl;
 
@@ -101,3 +107,14 @@ snippet uio
 
 snippet u
 	using ${1:std}::${2:vector};
+
+snippet singleton
+	class ${1:Name} {
+	public:
+		${6}
+
+	private:
+		${1:Name}()${3} { ${4} }
+		~${1:Name}() {${5}}
+		${2}
+	};
